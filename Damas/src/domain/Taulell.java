@@ -13,7 +13,17 @@ public class Taulell {
 		jugador[0] = new Jugador(names[0], BLANC);
 		jugador[1] = new Jugador(names[1], NEGRE);
 	
-		init();
+		for (int i = 0; i < taulell.length; i++) {
+			for (int j = 0; j < taulell.length; j++) {
+				taulell[i][j] = null;
+			}
+		}
+		
+		taulell[1][1] = new Ficha(jugador[0]);
+		taulell[2][2] = new Ficha(jugador[1]);
+		taulell[4][2] = new Ficha(jugador[1]);
+		
+		//init();
 	
 	}
 	
@@ -70,21 +80,6 @@ public class Taulell {
 
 	public void moviment(int xActual, int yActual, int xNova, int yNova) throws Exception{
 		
-		/* PODEM MOURE?
-		 * Nomes podem en els seguents casos:
-		 * 
-		 * 1) A la posicio es trobi una ficha
-		 * 2) No surt del taulell
-		 * 3) No hi ha una ficha nostre a la posicio que volem anar
-		 * 
-		 * PODEM MATAR?
-		 * Nomes podem si:
-		 * 
-		 * 1) Es cumpleix que podem moure
-		 * 2) No hi ha una ficha radera de la que es vol matar (posicio en la que la notre ficha acabaria)
-		 * 
-		 */
-		
 		Coordenada coordenadaActual = new Coordenada(xActual, yActual);
 		Coordenada coordenadaNova = new Coordenada(xNova, yNova);
 		
@@ -112,7 +107,8 @@ public class Taulell {
 					
 					killMovement(coordenadaActual, coordenadaNova);
 					
-					cambioDeTurno();
+					if(!keepKilling(coordenadaNova))
+						cambioDeTurno();
 				}
 			}
 			else 
@@ -120,6 +116,34 @@ public class Taulell {
 			
 		}
 		
+	}
+
+	private boolean keepKilling(Coordenada coordenadaActual) throws Exception {
+		
+		Ficha fichaSeleccionada = taulell[coordenadaActual.getX()][coordenadaActual.getY()];
+		
+		Coordenada coordenadaVictima = coordenadaActual.getDreta(fichaSeleccionada.getColor());
+
+		if(taulell[coordenadaVictima.getX()][coordenadaVictima.getY()] != null){ //RIGHT
+			return checkFinalPosition(coordenadaVictima);
+		}
+		else{ //LEFT
+			coordenadaVictima = coordenadaActual.getEsquerra(fichaSeleccionada.getColor());
+			
+			if(taulell[coordenadaVictima.getX()][coordenadaVictima.getY()] != null){
+				return checkFinalPosition(coordenadaVictima);
+			}
+		}
+		
+		return false;
+	}
+
+	private boolean checkFinalPosition(Coordenada coordenadaVictima) throws Exception {
+		
+		Coordenada coordenadaNovaDreta = coordenadaVictima.getDreta(taulell[coordenadaVictima.getX()][coordenadaVictima.getY()].getColor());
+		Coordenada coordenadaNovaEsquerra = coordenadaVictima.getEsquerra(taulell[coordenadaVictima.getX()][coordenadaVictima.getY()].getColor());
+		
+		return taulell[coordenadaNovaDreta.getX()][coordenadaNovaDreta.getY()] != null || taulell[coordenadaNovaEsquerra.getX()][coordenadaNovaEsquerra.getY()] != null;
 	}
 
 	private void killMovement(Coordenada coordenadaActual, Coordenada coordenadaNova) throws Exception {
@@ -141,7 +165,7 @@ public class Taulell {
 			throw new Exception("ERROR: No es pot matar una ficha teva.");
 		else{
 			// Kill
-//			fichaVictima.setEstat();
+			fichaVictima.setEstat();
 			taulell[coordenadaFichaVictima.getX()][coordenadaFichaVictima.getY()] = null;
 			// Change to the new position
 			taulell[coordenadaNova.getX()][coordenadaNova.getY()] = taulell[coordenadaActual.getX()][coordenadaActual.getY()];
@@ -150,8 +174,6 @@ public class Taulell {
 			
 		}
 			
-		
-		
 	}
 
 	private void cambioDeTurno() {
