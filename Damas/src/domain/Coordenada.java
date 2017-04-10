@@ -9,7 +9,7 @@ public class Coordenada {
 	
 	public Coordenada(int x, int y) throws Exception{
 		
-		if(x < 0 || y < 0 || x > 60 || y > 60)
+		if(x < 0 || y < 0 || x > 8 || y > 8)
 			throw new Exception("ERROR: Coordenada erronea.");
 		
 		this.x = x;
@@ -69,7 +69,8 @@ public class Coordenada {
 
 	public boolean isSimpleMovement(Coordenada nova){
 		
-		return (x - nova.getX() == 1 || x - nova.getX() == -1);
+		return (x - nova.getX() == 1 || x - nova.getX() == -1) &&
+				(y - nova.getY() == 1 || y - nova.getY() == -1);
 		
 	}
 	

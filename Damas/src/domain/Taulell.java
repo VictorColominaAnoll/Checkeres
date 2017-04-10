@@ -18,12 +18,15 @@ public class Taulell {
 	}
 	
 	private void init() {
+		
 		for (int i = 0; i < taulell.length; i++) {
 			for (int j = 0; j < taulell.length; j++) {
 				if (i < 3)  // BLANCAS
 					introduirFichaEnElTaulell(i, j, jugador[0]);
 				else
-					if(i > 4) //NEGRAS
+					if(i < 5) 
+						taulell[i][j] = null;
+					else //NEGRAS
 						introduirFichaEnElTaulell(i, j, jugador[1]);
 			}
 		}
@@ -84,17 +87,36 @@ public class Taulell {
 		
 		//QUAN LES COORDENADAS ENS LES DONEN x2 VOL DIR QUE VOL MATAR A ALGU, PER TANT NOMES HAUREM DE COMPROVAR EN AQUEST CAS.
 		
-		
 		Coordenada coordenadaActual = new Coordenada(xActual, yActual);
 		Coordenada coordenadaNova = new Coordenada(xNova, yNova);
 		
+		Ficha fichaSeleccionada = taulell[coordenadaActual.getX()][coordenadaActual.getY()];
+		
+		if(fichaSeleccionada == null)
+			throw new Exception("ERROR: No s'ha seleccionat cap ficha.");
+		else
+			if(!fichaSeleccionada.getJugador().getTurno())
+				throw new Exception("ERROR: Ficha de otro jugador.");
+		
 		if(coordenadaActual.isSimpleMovement(coordenadaNova)){
 			simpleMovement(coordenadaActual, coordenadaNova);
-		} else {
+			
+			cambioDeTurno();
+			
+		} else {			
+			throw new Exception("ERROR: Moviment no valid.");
+			
 			// VOL MATAR
+			
 		}
 		
+	}
+
+	private void cambioDeTurno() {
 		
+		jugador[0].setTurno(!jugador[0].getTurno());
+		jugador[1].setTurno(!jugador[1].getTurno());
+
 	}
 
 	private void simpleMovement(Coordenada coordenadaActual, Coordenada coordenadaNova) throws Exception {
@@ -102,6 +124,7 @@ public class Taulell {
 			throw new Exception("ERROR: Existeix una ficha en la nova posicio");
 		else{
 			// Change to the new position
+			System.out.println(taulell[coordenadaActual.getX()][coordenadaActual.getY()]);
 			taulell[coordenadaNova.getX()][coordenadaNova.getY()] = taulell[coordenadaActual.getX()][coordenadaActual.getY()];
 			// Delete from the old position
 			taulell[coordenadaActual.getX()][coordenadaActual.getY()] = null;
