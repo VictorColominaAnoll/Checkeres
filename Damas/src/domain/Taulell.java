@@ -2,10 +2,6 @@ package domain;
 
 public class Taulell {
 
-	// DRETA x++, y--
-	// ESQUERRA x--, y--
-
-	
 	private static final int BLANC = 0;
 	private static final int NEGRE = 1;
 	
@@ -92,9 +88,25 @@ public class Taulell {
 		Coordenada coordenadaActual = new Coordenada(xActual, yActual);
 		Coordenada coordenadaNova = new Coordenada(xNova, yNova);
 		
+		if(coordenadaActual.isSimpleMovement(coordenadaNova)){
+			simpleMovement(coordenadaActual, coordenadaNova);
+		} else {
+			// VOL MATAR
+		}
 		
 		
-		
+	}
+
+	private void simpleMovement(Coordenada coordenadaActual, Coordenada coordenadaNova) throws Exception {
+		if(taulell[coordenadaNova.getX()][coordenadaNova.getY()] != null)
+			throw new Exception("ERROR: Existeix una ficha en la nova posicio");
+		else{
+			// Change to the new position
+			taulell[coordenadaNova.getX()][coordenadaNova.getY()] = taulell[coordenadaActual.getX()][coordenadaActual.getY()];
+			// Delete from the old position
+			taulell[coordenadaActual.getX()][coordenadaActual.getY()] = null;
+		}
+			
 	}
 	
 	//FER UN METODE PER SABER CUANTAS FICHAS TE UN DELS DOS JUGADORS.

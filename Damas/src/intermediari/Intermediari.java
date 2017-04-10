@@ -14,4 +14,9 @@ public class Intermediari {
 		return taulell.toString();
 	}
 	
+	public void moviment(int xActual, int yActual, int xNova, int yNova) throws Exception{
+		this.taulell.moviment(xActual, yActual, xNova, yNova);
+	}
+	
+	
 }
