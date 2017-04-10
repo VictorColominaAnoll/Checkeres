@@ -85,8 +85,6 @@ public class Taulell {
 		 * 
 		 */
 		
-		//QUAN LES COORDENADAS ENS LES DONEN x2 VOL DIR QUE VOL MATAR A ALGU, PER TANT NOMES HAUREM DE COMPROVAR EN AQUEST CAS.
-		
 		Coordenada coordenadaActual = new Coordenada(xActual, yActual);
 		Coordenada coordenadaNova = new Coordenada(xNova, yNova);
 		
@@ -136,21 +134,19 @@ public class Taulell {
 		}
 		
 		Ficha fichaVictima = taulell[coordenadaFichaVictima.getX()][coordenadaFichaVictima.getY()];
-		System.out.println(fichaVictima.getColor());
-		System.out.println(fichaSeleccionada.getColor());
-		
+				
 		if(fichaVictima == null)
 			throw new Exception("ERROR: Moviment no valid.");
 		if(fichaVictima.getColor() == fichaSeleccionada.getColor())
 			throw new Exception("ERROR: No es pot matar una ficha teva.");
 		else{
 			// Kill
-			fichaVictima.setEstat();
-			fichaVictima = null;
+//			fichaVictima.setEstat();
+			taulell[coordenadaFichaVictima.getX()][coordenadaFichaVictima.getY()] = null;
 			// Change to the new position
-			taulell[coordenadaNova.getX()][coordenadaNova.getY()] = fichaSeleccionada;
+			taulell[coordenadaNova.getX()][coordenadaNova.getY()] = taulell[coordenadaActual.getX()][coordenadaActual.getY()];
 			// Delete from the old position
-			fichaSeleccionada = null; 
+			taulell[coordenadaActual.getX()][coordenadaActual.getY()] = null; 
 			
 		}
 			

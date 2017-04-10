@@ -46,9 +46,9 @@ public class Coordenada {
 		int y;
 		
 		if(color == 0) // White
-			y = this.y - 1;
-		else // Black
 			y = this.y + 1;
+		else // Black
+			y = this.y - 1;
 	
 		return new Coordenada(x,y);
 		
@@ -60,9 +60,9 @@ public class Coordenada {
 		int y;
 		
 		if(color == 0) // White
-			y = this.y - 1;
-		else // Black
 			y = this.y + 1;
+		else // Black
+			y = this.y - 1;
 	
 		return new Coordenada(x,y);
 		
