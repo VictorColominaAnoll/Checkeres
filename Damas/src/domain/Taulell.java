@@ -103,12 +103,58 @@ public class Taulell {
 			
 			cambioDeTurno();
 			
-		} else {			
-			throw new Exception("ERROR: Moviment no valid.");
+		} else {
 			
-			// VOL MATAR
+			if(coordenadaActual.isKillMovement(coordenadaNova)){ // VOL MATAR
+				
+				if(taulell[coordenadaNova.getX()][coordenadaNova.getY()] != null)
+					throw new Exception("ERROR: Ja existeix una ficha a la nova posicio.");
+				
+				else{
+					
+					killMovement(coordenadaActual, coordenadaNova);
+					
+					cambioDeTurno();
+				}
+			}
+			else 
+				throw new Exception("ERROR: Moviment no valid.");
 			
 		}
+		
+	}
+
+	private void killMovement(Coordenada coordenadaActual, Coordenada coordenadaNova) throws Exception {
+		
+		Ficha fichaSeleccionada = taulell[coordenadaActual.getX()][coordenadaActual.getY()];
+		Coordenada coordenadaFichaVictima;
+		
+		if(coordenadaActual.direccio(coordenadaNova)){
+			coordenadaFichaVictima = coordenadaActual.getDreta(fichaSeleccionada.getColor());
+		} else{
+			coordenadaFichaVictima = coordenadaActual.getEsquerra(fichaSeleccionada.getColor());
+		}
+		
+		Ficha fichaVictima = taulell[coordenadaFichaVictima.getX()][coordenadaFichaVictima.getY()];
+		System.out.println(fichaVictima.getColor());
+		System.out.println(fichaSeleccionada.getColor());
+		
+		if(fichaVictima == null)
+			throw new Exception("ERROR: Moviment no valid.");
+		if(fichaVictima.getColor() == fichaSeleccionada.getColor())
+			throw new Exception("ERROR: No es pot matar una ficha teva.");
+		else{
+			// Kill
+			fichaVictima.setEstat();
+			fichaVictima = null;
+			// Change to the new position
+			taulell[coordenadaNova.getX()][coordenadaNova.getY()] = fichaSeleccionada;
+			// Delete from the old position
+			fichaSeleccionada = null; 
+			
+		}
+			
+		
 		
 	}
 
@@ -124,7 +170,6 @@ public class Taulell {
 			throw new Exception("ERROR: Existeix una ficha en la nova posicio");
 		else{
 			// Change to the new position
-			System.out.println(taulell[coordenadaActual.getX()][coordenadaActual.getY()]);
 			taulell[coordenadaNova.getX()][coordenadaNova.getY()] = taulell[coordenadaActual.getX()][coordenadaActual.getY()];
 			// Delete from the old position
 			taulell[coordenadaActual.getX()][coordenadaActual.getY()] = null;

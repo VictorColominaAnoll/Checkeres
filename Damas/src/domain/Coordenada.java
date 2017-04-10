@@ -33,44 +33,52 @@ public class Coordenada {
 		this.y = y;
 	}
 
-	public Coordenada getDreta(Coordenada c, int color){
+	public boolean direccio(Coordenada coordenadaNova){
 		
-		int x = c.getX() + 1;
+		//RETURN false IF THE DIRECTION IS TO THE LEFT AND true IF IT GOES TO THE RIGHT
+			
+		return x - coordenadaNova.getX() > 0;
+	}
+	
+	public Coordenada getDreta(int color) throws Exception{
+
+		int x = this.x + 1;
 		int y;
 		
 		if(color == 0) // White
-			y = c.getY() - 1;
+			y = this.y - 1;
 		else // Black
-			y = c.getY() + 1;
-		
-		c.setX(x);
-		c.setY(y);
-		
-		return c;
+			y = this.y + 1;
+	
+		return new Coordenada(x,y);
 		
 	}
 	
-	public Coordenada getEsquerra(Coordenada c, int color){
+	public Coordenada getEsquerra(int color) throws Exception{
 		
-		int x = c.getX() - 1;
+		int x = this.x + 1;
 		int y;
 		
 		if(color == 0) // White
-			y = c.getY() - 1;
+			y = this.y - 1;
 		else // Black
-			y = c.getY() + 1;
-		
-		c.setX(x);
-		c.setY(y);
-				
-		return c;
+			y = this.y + 1;
+	
+		return new Coordenada(x,y);
 		
 	}
 
-	public boolean isSimpleMovement(Coordenada nova){
+	public boolean isSimpleMovement(Coordenada coordenadaNova){
 		
-		return (x - nova.getX() == 1 || x - nova.getX() == -1) &&
-				(y - nova.getY() == 1 || y - nova.getY() == -1);
+		return (x - coordenadaNova.getX() == 1 || x - coordenadaNova.getX() == -1) &&
+				(y - coordenadaNova.getY() == 1 || y - coordenadaNova.getY() == -1);
+		
+	}
+
+	public boolean isKillMovement(Coordenada coordenadaNova) {
+		
+		return (x - coordenadaNova.getX() == 2 || x - coordenadaNova.getX() == -2) &&
+				(y - coordenadaNova.getY() == 2 || y - coordenadaNova.getY() == -2);
 		
 	}
 	
