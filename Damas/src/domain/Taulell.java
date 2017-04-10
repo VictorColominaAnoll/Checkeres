@@ -69,7 +69,7 @@ public class Taulell {
 		return resultat;
 	}
 
-	public void moviment(int x, int y) throws Exception{
+	public void moviment(int xActual, int yActual, int xNova, int yNova) throws Exception{
 		
 		/* PODEM MOURE?
 		 * Nomes podem en els seguents casos:
@@ -86,7 +86,11 @@ public class Taulell {
 		 * 
 		 */
 		
-		Coordenada c = new Coordenada(x, y);
+		//QUAN LES COORDENADAS ENS LES DONEN x2 VOL DIR QUE VOL MATAR A ALGU, PER TANT NOMES HAUREM DE COMPROVAR EN AQUEST CAS.
+		
+		
+		Coordenada coordenadaActual = new Coordenada(xActual, yActual);
+		Coordenada coordenadaNova = new Coordenada(xNova, yNova);
 		
 		
 		
