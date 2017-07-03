@@ -18,7 +18,7 @@ public class VisualitzarPrint {
 		Intermediari i = new Intermediari(names);
 		System.out.println("Blanca = 0\nNegra = 1\n----------------\n");
 		while (true){
-			System.out.println(i.getTorn());
+			System.out.println("Torn: " + i.getTorn());
 			
 			
 			System.out.println(i.toString());
@@ -38,7 +38,7 @@ public class VisualitzarPrint {
 			try {
 				i.moviment(xActual, yActual, xNova, yNova);
 			} catch (Exception e) {
-				System.out.println("\n" + e.getMessage());
+				e.printStackTrace();
 			}
 			
 		}

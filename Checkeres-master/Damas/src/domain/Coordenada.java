@@ -35,9 +35,8 @@ public class Coordenada {
 
 	public boolean direccio(Coordenada coordenadaNova){
 		
-		//RETURN false IF THE DIRECTION IS TO THE LEFT AND true IF IT GOES TO THE RIGHT
-			
-		return x - coordenadaNova.getX() > 0;
+		//RETURN false IF THE DIRECTION GOES TO THE RIGHT AND true IF GOES TO THE LEFT
+		return y - coordenadaNova.getY() > 0;
 	}
 	
 	public Coordenada getDreta(int color) throws Exception{
@@ -60,9 +59,9 @@ public class Coordenada {
 		int y;
 		
 		if(color == 0) // White
-			y = this.y + 1;
-		else // Black
 			y = this.y - 1;
+		else // Black
+			y = this.y + 1;
 	
 		return new Coordenada(x,y);
 		

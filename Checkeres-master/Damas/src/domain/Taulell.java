@@ -5,7 +5,7 @@ public class Taulell {
 	private static final int BLANC = 0;
 	private static final int NEGRE = 1;
 	
-	private Ficha taulell[][] = new Ficha[8][8];
+	private Casella taulell[][] = new Casella[8][8];
 	private Jugador[] jugador = new Jugador[2];
 	
 	public Taulell(String []names){
@@ -15,18 +15,17 @@ public class Taulell {
 	
 		for (int i = 0; i < taulell.length; i++) {
 			for (int j = 0; j < taulell.length; j++) {
-				taulell[i][j] = null;
+				try {
+					taulell[i][j] = new Casella(new Coordenada(i,j));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		
-		taulell[1][1] = new Ficha(jugador[0]);
-		taulell[2][2] = new Ficha(jugador[1]);
-		taulell[4][2] = new Ficha(jugador[1]);
-		
-		//init();
+		init();
 	
 	}
-	
 	private void init() {
 		
 		for (int i = 0; i < taulell.length; i++) {
@@ -34,9 +33,7 @@ public class Taulell {
 				if (i < 3)  // BLANCAS
 					introduirFichaEnElTaulell(i, j, jugador[0]);
 				else
-					if(i < 5) 
-						taulell[i][j] = null;
-					else //NEGRAS
+					if(i > 4)  //NEGRAS
 						introduirFichaEnElTaulell(i, j, jugador[1]);
 			}
 		}
@@ -44,14 +41,14 @@ public class Taulell {
 
 	private void introduirFichaEnElTaulell(int i, int j, Jugador player) {
 		if (i % 2 == 0 && (j == 1 || j == 3 ||j == 5 ||j == 7)) { // PARES
-			taulell[i][j] = new Ficha(player);
+			taulell[i][j].setFicha(new Ficha(player));
 		}
 		else {
 			if(i % 2 != 0 && (j == 0 || j == 2 ||j == 4 ||j == 6)){
-				taulell[i][j] = new Ficha(player);
+				taulell[i][j].setFicha(new Ficha(player));
 			}
 			else{
-				taulell[i][j] = null;
+				taulell[i][j].setFicha(null);
 			}
 			
 		}
@@ -64,9 +61,9 @@ public class Taulell {
 		
 		for (int i = 0; i < taulell.length; i++) {
 			for (int j = 0; j < taulell.length; j++) {
-				if(taulell[i][j] != null){
-					resultat += taulell[i][j].getColor() + "  ";
-				}
+				if(!taulell[i][j].isEmpty())
+						resultat += taulell[i][j].getColor() + "  ";
+				
 				else{
 					resultat += "-  ";
 				}
@@ -83,7 +80,7 @@ public class Taulell {
 		Coordenada coordenadaActual = new Coordenada(xActual, yActual);
 		Coordenada coordenadaNova = new Coordenada(xNova, yNova);
 		
-		Ficha fichaSeleccionada = taulell[coordenadaActual.getX()][coordenadaActual.getY()];
+		Ficha fichaSeleccionada = taulell[coordenadaActual.getX()][coordenadaActual.getY()].getFicha();
 		
 		if(fichaSeleccionada == null)
 			throw new Exception("ERROR: No s'ha seleccionat cap ficha.");
@@ -99,15 +96,14 @@ public class Taulell {
 		} else {
 			
 			if(coordenadaActual.isKillMovement(coordenadaNova)){ // VOL MATAR
-				
-				if(taulell[coordenadaNova.getX()][coordenadaNova.getY()] != null)
+				if (taulell[coordenadaNova.getX()][coordenadaNova.getY()].getFicha() != null)
 					throw new Exception("ERROR: Ja existeix una ficha a la nova posicio.");
-				
-				else{
-					
+
+				else {
+
 					killMovement(coordenadaActual, coordenadaNova);
-					
-					if(!keepKilling(coordenadaNova))
+
+					if (!keepKilling(coordenadaNova))
 						cambioDeTurno();
 				}
 			}
@@ -118,46 +114,71 @@ public class Taulell {
 		
 	}
 	
-	private boolean keepKilling(Coordenada coordenadaActual) throws Exception {
-		
-		Ficha fichaSeleccionada = taulell[coordenadaActual.getX()][coordenadaActual.getY()];
-		
-		Coordenada coordenadaVictima = coordenadaActual.getDreta(fichaSeleccionada.getColor());
+	
+	
+	
+	
+	
+//	private boolean keepKilling(Coordenada coordenadaActual) throws Exception {
+//		
+//		Ficha fichaSeleccionada = taulell[coordenadaActual.getX()][coordenadaActual.getY()].getFicha();
+//		
+//		Coordenada coordenadaVictima = coordenadaActual.getDreta(fichaSeleccionada.getColor());
+//
+//		if(/*taulell[coordenadaVictima.getX()][coordenadaVictima.getY()] != null ||*/ taulell[coordenadaVictima.getX()][coordenadaVictima.getY()].getColor() != taulell[coordenadaActual.getX()][coordenadaActual.getY()].getColor()){ //RIGHT
+//			return checkFinalPosition(coordenadaVictima.getDreta(taulell[coordenadaVictima.getX()][coordenadaVictima.getY()].getColor()));
+//		}
+//		else{ //LEFT
+//			coordenadaVictima = coordenadaActual.getEsquerra(fichaSeleccionada.getColor());
+//			
+//			if(/*taulell[coordenadaVictima.getX()][coordenadaVictima.getY()] != null ||*/ taulell[coordenadaVictima.getX()][coordenadaVictima.getY()].getColor() != taulell[coordenadaActual.getX()][coordenadaActual.getY()].getColor()){
+//				return checkFinalPosition(coordenadaVictima.getEsquerra(taulell[coordenadaVictima.getX()][coordenadaVictima.getY()].getColor()));
+//			}
+//		}
+//		
+//		return false;
+//	}
 
-		if(/*taulell[coordenadaVictima.getX()][coordenadaVictima.getY()] != null ||*/ taulell[coordenadaVictima.getX()][coordenadaVictima.getY()].getColor() != taulell[coordenadaActual.getX()][coordenadaActual.getY()].getColor()){ //RIGHT
-			return checkFinalPosition(coordenadaVictima);
-		}
-		else{ //LEFT
-			coordenadaVictima = coordenadaActual.getEsquerra(fichaSeleccionada.getColor());
-			
-			if(/*taulell[coordenadaVictima.getX()][coordenadaVictima.getY()] != null ||*/ taulell[coordenadaVictima.getX()][coordenadaVictima.getY()].getColor() != taulell[coordenadaActual.getX()][coordenadaActual.getY()].getColor()){
-				return checkFinalPosition(coordenadaVictima);
-			}
-		}
+	
+	private boolean keepKilling(Coordenada coordenadaActual) throws Exception {
+		//Left
 		
+		int xActual = coordenadaActual.getX();
+		int yActual = coordenadaActual.getY();
+		
+		int color = taulell[xActual][yActual].getColor();
+		
+		Coordenada coordenadaVictima = coordenadaActual.getEsquerra(color);
+		
+		int x = coordenadaVictima.getX();
+		int y = coordenadaVictima.getY();
+		
+		if (!taulell[x][y].isEmpty())
+			if (!taulell[x][y].isSamePlayer(taulell[xActual][yActual].getFicha())) {
+				return checkFinalPosition(coordenadaVictima.getEsquerra(color));
+			}
 		return false;
 	}
-
 	private boolean checkFinalPosition(Coordenada coordenadaVictima) throws Exception {
 		
-		Coordenada coordenadaNovaDreta = coordenadaVictima.getDreta(taulell[coordenadaVictima.getX()][coordenadaVictima.getY()].getColor());
-		Coordenada coordenadaNovaEsquerra = coordenadaVictima.getEsquerra(taulell[coordenadaVictima.getX()][coordenadaVictima.getY()].getColor());
-		
-		return taulell[coordenadaNovaDreta.getX()][coordenadaNovaDreta.getY()] != null || taulell[coordenadaNovaEsquerra.getX()][coordenadaNovaEsquerra.getY()] != null;
+		return taulell[coordenadaVictima.getX()][coordenadaVictima.getY()].isEmpty();
 	}
 
 	private void killMovement(Coordenada coordenadaActual, Coordenada coordenadaNova) throws Exception {
 		
-		Ficha fichaSeleccionada = taulell[coordenadaActual.getX()][coordenadaActual.getY()];
+		Ficha fichaSeleccionada = taulell[coordenadaActual.getX()][coordenadaActual.getY()].getFicha();
 		Coordenada coordenadaFichaVictima;
 		
 		if(coordenadaActual.direccio(coordenadaNova)){
-			coordenadaFichaVictima = coordenadaActual.getDreta(fichaSeleccionada.getColor());
-		} else{
 			coordenadaFichaVictima = coordenadaActual.getEsquerra(fichaSeleccionada.getColor());
+			System.out.println("holis");
+		} else{
+			coordenadaFichaVictima = coordenadaActual.getDreta(fichaSeleccionada.getColor());
+			System.out.println("adewis");
+
 		}
 		
-		Ficha fichaVictima = taulell[coordenadaFichaVictima.getX()][coordenadaFichaVictima.getY()];
+		Ficha fichaVictima = taulell[coordenadaFichaVictima.getX()][coordenadaFichaVictima.getY()].getFicha();
 				
 		if(fichaVictima == null)
 			throw new Exception("ERROR: Moviment no valid.");
@@ -166,11 +187,11 @@ public class Taulell {
 		else{
 			// Kill
 			fichaVictima.setEstat();
-			taulell[coordenadaFichaVictima.getX()][coordenadaFichaVictima.getY()] = null;
+			taulell[coordenadaFichaVictima.getX()][coordenadaFichaVictima.getY()].setFicha(null);
 			// Change to the new position
-			taulell[coordenadaNova.getX()][coordenadaNova.getY()] = taulell[coordenadaActual.getX()][coordenadaActual.getY()];
+			taulell[coordenadaNova.getX()][coordenadaNova.getY()].setFicha(taulell[coordenadaActual.getX()][coordenadaActual.getY()].getFicha());
 			// Delete from the old position
-			taulell[coordenadaActual.getX()][coordenadaActual.getY()] = null; 
+			taulell[coordenadaActual.getX()][coordenadaActual.getY()].setFicha(null);
 			
 		}
 			
@@ -192,13 +213,13 @@ public class Taulell {
 	}
 
 	private void simpleMovement(Coordenada coordenadaActual, Coordenada coordenadaNova) throws Exception {
-		if(taulell[coordenadaNova.getX()][coordenadaNova.getY()] != null)
+		if(taulell[coordenadaNova.getX()][coordenadaNova.getY()].getFicha() != null)
 			throw new Exception("ERROR: Existeix una ficha en la nova posicio");
 		else{
 			// Change to the new position
-			taulell[coordenadaNova.getX()][coordenadaNova.getY()] = taulell[coordenadaActual.getX()][coordenadaActual.getY()];
+			taulell[coordenadaNova.getX()][coordenadaNova.getY()].setFicha(taulell[coordenadaActual.getX()][coordenadaActual.getY()].getFicha());
 			// Delete from the old position
-			taulell[coordenadaActual.getX()][coordenadaActual.getY()] = null;
+			taulell[coordenadaActual.getX()][coordenadaActual.getY()].setFicha(null);
 		}
 			
 	}
